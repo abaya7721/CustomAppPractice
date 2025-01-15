@@ -47,6 +47,6 @@ public class Vehicle {
     @Override
     public String toString() {
         return "ID: " + vehicleId + "," +
-                " Model: = " + model;
+                " Model: " + model;
     }
 }

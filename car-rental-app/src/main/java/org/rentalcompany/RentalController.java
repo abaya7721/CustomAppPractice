@@ -23,7 +23,6 @@ public class RentalController{
         vehicles.add(new Vehicle(212, "Explorer"));
         vehicles.add(new Vehicle(124, "Malibu"));
 
-
     }
 
     public void executeRentalApp(){
@@ -62,6 +61,8 @@ public class RentalController{
         customers.add(customer);
     }
 
+
+
     public Customer getCustomer() {
         //int index = customers.indexOf(customer);
         return customers.getLast();
@@ -71,26 +72,27 @@ public class RentalController{
 
         if (vehicles.size() > 0) {
             viewAvailableVehicles();
-            io.displayMessage("Select a vehicle - Enter corresponding id");
+            io.displayMessage("Select a vehicle - Enter corresponding ID");
             int vehicleId = io.getInt("");
-                    vehicle = checkIfVehicleIsInList(vehicles, vehicleId);
-                    if (vehicle != null) {
-                        vehicle.setRented(true);
-                        vehicles.remove(vehicle);
-                        rentedVehicles.add(vehicle);
-                        vehicle.setRentedCustomer(customer.getCustomerId());
-                        io.displayMessage(vehicle.getModel() + " rented by " + customer.getLastName());
-                    }
-                    else { io.displayMessage("Error occurred with vehicle id, vehicle not rented."); }
+                vehicle = checkIfVehicleIsInList(vehicles, vehicleId);
+                if (vehicle != null) {
+                    vehicle.setRented(true);
+                    vehicles.remove(vehicle);
+                    rentedVehicles.add(vehicle);
+                    vehicle.setRentedCustomer(customer.getCustomerId());
+                    io.displayMessage(vehicle.getModel() + " rented by " + customer.getLastName());
                 }
+                else { io.displayMessage("Error occurred with vehicle id, vehicle not rented."); }
+            }
         else { io.displayMessage("No Vehicles Available"); }
     }
 
 
     public void returnVehicle() {
-        int id = io.getInt("Enter vehicle ID");
-
+        showRentedVehiclesInformation();
+        int id = io.getInt("Enter vehicle ID to return");
         vehicle = checkIfVehicleIsInList(rentedVehicles, id);
+
         if (vehicle != null) {
             vehicle.setRented(false);
             vehicles.add(vehicle);
@@ -100,7 +102,6 @@ public class RentalController{
         }
         else { io.displayMessage("Error occurred with vehicle id, vehicle not returned."); }
     }
-
 
     public void viewAvailableVehicles() {
         io.displayMessage("----Vehicles----");
@@ -119,9 +120,19 @@ public class RentalController{
                         break;
                         }
                     }
-                io.displayMessage("Vehicle Not Found");
                 }
+            else {io.displayMessage("Vehicle Not Found"); }
         return getVehicle;
     }
+
+    public void showRentedVehiclesInformation (){
+        if (!rentedVehicles.isEmpty()){
+        for (Vehicle vehicle : rentedVehicles) {
+                System.out.println("Vehicle " + vehicle.getVehicleId() + " rented out by customer " + vehicle.getRentedCustomer());
+            }
+        }
+    }
+
+
 
 }

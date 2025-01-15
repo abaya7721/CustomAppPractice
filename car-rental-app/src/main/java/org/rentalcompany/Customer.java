@@ -8,10 +8,6 @@ public class Customer {
     private int age;
 
 
-    public Customer() {
-
-    }
-
     public int getCustomerId() {
         return customerId;
     }
