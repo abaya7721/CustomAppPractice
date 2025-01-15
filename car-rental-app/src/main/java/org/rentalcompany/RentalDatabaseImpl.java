@@ -62,7 +62,8 @@ public class RentalDatabaseImpl implements RentalDatabase{
         }
     }
 
-    public Vehicle getSingleVehicle(int id) {
+    // Have to specify the Map with exact data type for Key and Value
+    public Vehicle getSingleVehicle(Map<Integer, Vehicle> vehicles, Integer id) {
         return vehicles.get(id);
     }
 
