@@ -8,6 +8,11 @@ public class Customer {
     private int age;
 
 
+    public Customer(String lastName, int customerId) {
+        this.lastName = lastName;
+        this.customerId = customerId;
+    }
+
     public int getCustomerId() {
         return customerId;
     }

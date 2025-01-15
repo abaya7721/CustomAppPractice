@@ -2,6 +2,7 @@ package org.rentalcompany;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class RentalController{
 
@@ -23,6 +24,7 @@ public class RentalController{
         vehicles.add(new Vehicle(212, "Explorer"));
         vehicles.add(new Vehicle(124, "Malibu"));
 
+        customers.add(new Customer("Mac", 1));
     }
 
     public void executeRentalApp(){
@@ -31,11 +33,11 @@ public class RentalController{
 
         while (running) {
             io.displayMenu();
-            int menuSelect = io.menuSelection();
+        int menuSelect = io.menuSelection();
             switch(menuSelect) {
                 case 1:
-                    enterCustomerInformation();
-                    rentVehicle(getCustomer());
+                    //enterCustomerInformation();
+                    rentVehicle(enterCustomerInformation());
                     break;
                 case 2:
                     returnVehicle();
@@ -45,28 +47,41 @@ public class RentalController{
                 case 4:
                     running = false;
                     break;
+                default:
+                    io.displayMessage("Enter number between 1 and 4.");
             }
         }
     }
 
-    public void enterCustomerInformation() {
-        customer = new Customer();
+    public Customer enterCustomerInformation() {
+        Customer customer1 = new Customer("", 0);
+        io.displayMessage("Customer Listing");
+        for (Customer customer : customers) { io.displayMessage(customer.getLastName()+" " +customer.getCustomerId());}
 
-        io.displayMessage("Enter Customer Information");
+        io.displayMessage("Enter Customer Information -------");
         String lastName = io.getString("Enter Last Name");
         int customerId = io.getInt("Enter Customer ID Number");
 
-        customer.setCustomerId(customerId);
-        customer.setLastName(lastName);
-        customers.add(customer);
+        customer1.setCustomerId(customerId);
+        customer1.setLastName(lastName);
+
+        int currentCustomerId = customer1.getCustomerId();
+        if(customers.stream().anyMatch(customer -> Objects.equals(customer.getCustomerId(), currentCustomerId))) {
+                io.displayMessage("Existing Customer");
+            }
+        else { customers.add(customer1); }
+
+        return customer1;
+        //customers.add(customer);
     }
 
-
-
-    public Customer getCustomer() {
-        //int index = customers.indexOf(customer);
-        return customers.getLast();
-    }
+  /*  public Customer getCustomer() {
+        Customer customer1 = enterCustomerInformation();
+        for(Customer customer : customers) {
+            if (Objects.equals(customer, customer1));
+        }
+        return customer;
+    }*/
 
     public void rentVehicle(Customer customer) {
 
@@ -132,7 +147,5 @@ public class RentalController{
             }
         }
     }
-
-
 
 }

@@ -13,7 +13,14 @@ public class ConsoleIO {
 
     public int getInt(String prompt) {
         displayMessage(prompt);
-        return scanner.nextInt();
+        String selection = scanner.next();
+        int intSelect = 0;
+        try {
+            intSelect = Integer.parseInt(selection);
+        } catch (Exception e) {
+            displayMessage("Invalid input");
+        }
+        return intSelect;
     }
 
     public void displayMessage(String message) {
