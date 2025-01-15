@@ -19,7 +19,7 @@
    1. Enter vehicle information (vehicle id, mileage)
    2. Changes vehicles status to available
    3. Releases the customer from the vehicle
-5. View available and rented vehicles shows the vehicles and their information
+5. View available vehicle shows the vehicles and their information
 
 Future
     View rented vehicles

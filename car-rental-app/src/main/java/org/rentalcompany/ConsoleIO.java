@@ -8,7 +8,7 @@ public class ConsoleIO {
 
     public String getString(String prompt) {
         displayMessage(prompt);
-        return scanner.nextLine();
+        return scanner.next();
     }
 
     public int getInt(String prompt) {
