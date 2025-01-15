@@ -12,9 +12,8 @@ public interface RentalDatabase {
     // hashmap for vehicle id
     //Map<Object,ArrayList<Object>> multiMap = new HashMap<>();
 
-    Map<Integer, ArrayList<Customer>> getCustomers();
-    Map<Integer, ArrayList<Vehicle>> getVehicles();
-
+    Map<Integer, Customer> getCustomers();
+    Map<Integer, Vehicle> getVehicles();
     void addVehicle(Vehicle vehicle);
     void addCustomer(Customer customer);
 

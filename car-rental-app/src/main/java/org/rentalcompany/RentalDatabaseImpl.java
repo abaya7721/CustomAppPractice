@@ -9,8 +9,8 @@ import java.util.Map;
 
 public class RentalDatabaseImpl implements RentalDatabase{
 
-    private Map customers;
-    private Map vehicles;
+    private Map<Integer, Customer> customers;
+    private Map<Integer, Vehicle> vehicles;
 
     public RentalDatabaseImpl() {
         customers = new HashMap<>();
@@ -28,12 +28,24 @@ public class RentalDatabaseImpl implements RentalDatabase{
     }
 
     @Override
-    public Map<Integer, ArrayList<Vehicle>> getVehicles() {
+    public Map<Integer, Vehicle> getVehicles() {
         return Map.of();
     }
 
+    public void getVehiclesList() {
+        for (Map.Entry<Integer, Vehicle> vehiclesMap : vehicles.entrySet()) {
+            System.out.println("ID: " + vehiclesMap.getKey() + " , Vehicle: " + vehiclesMap.getValue());
+        }
+    }
+
+    public void getCustomerList() {
+        for (Map.Entry<Integer, Customer> customerEntryMap : customers.entrySet()) {
+            System.out.println("ID: " + customerEntryMap.getKey() + " , Customer: " + customerEntryMap.getValue());
+        }
+    }
+
     @Override
-    public Map<Integer, ArrayList<Customer>> getCustomers() {
+    public Map<Integer, Customer> getCustomers() {
         return Map.of();
     }
 
