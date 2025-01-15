@@ -17,6 +17,11 @@ public class RentalDatabaseImpl implements RentalDatabase{
         vehicles = new HashMap<>();
     }
 
+   /* @Override
+    public void addCustomer(Customer customer) {
+        customers.put(customer.getCustomerId(), customer);
+    }*/
+
     @Override
     public void addCustomer(Customer customer) {
         customers.put(customer.getCustomerId(), customer);
@@ -29,10 +34,10 @@ public class RentalDatabaseImpl implements RentalDatabase{
 
     @Override
     public Map<Integer, Vehicle> getVehicles() {
-        return Map.of();
+        return vehicles;
     }
 
-    public void getVehiclesList() {
+    public void getVehicleList() {
         for (Map.Entry<Integer, Vehicle> vehiclesMap : vehicles.entrySet()) {
             System.out.println("ID: " + vehiclesMap.getKey() + " , Vehicle: " + vehiclesMap.getValue());
         }
@@ -40,13 +45,13 @@ public class RentalDatabaseImpl implements RentalDatabase{
 
     public void getCustomerList() {
         for (Map.Entry<Integer, Customer> customerEntryMap : customers.entrySet()) {
-            System.out.println("ID: " + customerEntryMap.getKey() + " , Customer: " + customerEntryMap.getValue());
+            System.out.println("ID: " + customerEntryMap.getKey() + " , Last Name: " + customerEntryMap.getValue().toString());
         }
     }
 
     @Override
     public Map<Integer, Customer> getCustomers() {
-        return Map.of();
+        return customers;
     }
 
     @Override
