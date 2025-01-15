@@ -11,16 +11,13 @@ public class RentalDatabaseImpl implements RentalDatabase{
 
     private Map<Integer, Customer> customers;
     private Map<Integer, Vehicle> vehicles;
+    private Map<Integer, Vehicle> rentedVehicles;
 
     public RentalDatabaseImpl() {
         customers = new HashMap<>();
         vehicles = new HashMap<>();
+        rentedVehicles = new HashMap<>();
     }
-
-   /* @Override
-    public void addCustomer(Customer customer) {
-        customers.put(customer.getCustomerId(), customer);
-    }*/
 
     @Override
     public void addCustomer(Customer customer) {
@@ -37,9 +34,20 @@ public class RentalDatabaseImpl implements RentalDatabase{
         return vehicles;
     }
 
+    @Override
+    public Map<Integer, Vehicle> getRentedVehicles() {
+        return rentedVehicles;
+    }
+
     public void getVehicleList() {
         for (Map.Entry<Integer, Vehicle> vehiclesMap : vehicles.entrySet()) {
-            System.out.println("ID: " + vehiclesMap.getKey() + " , Vehicle: " + vehiclesMap.getValue());
+            System.out.println("ID: " + vehiclesMap.getKey() + " , " + vehiclesMap.getValue().toString());
+        }
+    }
+
+    public void getRentedVehicleList() {
+        for (Map.Entry<Integer, Vehicle> vehiclesMap : rentedVehicles.entrySet()) {
+            System.out.println("Vehicle " + vehiclesMap.getKey() + " rented by " + rentedVehicles.get(vehiclesMap.getKey()).getRentedCustomer());
         }
     }
 
@@ -47,6 +55,15 @@ public class RentalDatabaseImpl implements RentalDatabase{
         for (Map.Entry<Integer, Customer> customerEntryMap : customers.entrySet()) {
             System.out.println("ID: " + customerEntryMap.getKey() + " , Last Name: " + customerEntryMap.getValue().toString());
         }
+    }
+
+    // Have to specify the Map with exact data type for Key and Value
+    public Vehicle getSingleVehicle(Map<Integer, Vehicle> vehicles, Integer id) {
+        return vehicles.get(id);
+    }
+
+    public Customer getSingleCustomer(int id) {
+        return customers.get(id);
     }
 
     @Override

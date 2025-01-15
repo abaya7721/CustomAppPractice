@@ -18,6 +18,9 @@ public interface RentalDatabase {
     void addCustomer(Customer customer);
     void getCustomerList();
     void getVehicleList();
-
+    Customer getSingleCustomer(int id);
+    Vehicle getSingleVehicle(Map<Integer, Vehicle> vehicles, Integer id);
+    void getRentedVehicleList();
+    Map<Integer, Vehicle> getRentedVehicles();
 
 }

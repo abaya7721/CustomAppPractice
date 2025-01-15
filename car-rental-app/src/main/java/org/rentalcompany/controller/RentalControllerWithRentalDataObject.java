@@ -7,32 +7,18 @@ import org.rentalcompany.view.ConsoleIO;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 public class RentalControllerWithRentalDataObject {
 
     private ConsoleIO io = new ConsoleIO();
-    private List<Vehicle> vehicles;
     private List<Customer> customers;
-    private Customer customer;
-    private List<Vehicle> rentedVehicles;
     private Vehicle vehicle;
 
-    // --------------- refactored code below
     RentalDatabase rentData;
 
     public RentalControllerWithRentalDataObject(RentalDatabase data) {
-        // initializing customers list to add customers when information is collected
-        customers = new ArrayList<>();
-        rentedVehicles = new ArrayList<>();
-
-        // adding vehicle data to test app functionality
-        vehicles = new ArrayList<>();
-        vehicles.add(new Vehicle(113, "Ranger"));
-        vehicles.add(new Vehicle(212, "Explorer"));
-        vehicles.add(new Vehicle(124, "Malibu"));
-
-        customers.add(new Customer("Mac", 1));
 
         // ----------------- refactored code below
         this.rentData = data;
@@ -47,8 +33,7 @@ public class RentalControllerWithRentalDataObject {
         int menuSelect = io.menuSelection();
             switch(menuSelect) {
                 case 1:
-                    //enterCustomerInformation();
-                    rentVehicle(enterCustomerInformationAlternate());
+                    rentVehicle(enterCustomerInformation());
                     break;
                 case 2:
                     returnVehicle();
@@ -65,29 +50,7 @@ public class RentalControllerWithRentalDataObject {
     }
 
     public Customer enterCustomerInformation() {
-        Customer customer1 = new Customer("", 0);
-        io.displayMessage("Customer Listing");
-        for (Customer customer : customers) { io.displayMessage(customer.getLastName()+" " +customer.getCustomerId());}
-
-        io.displayMessage("Enter Customer Information -------");
-        String lastName = io.getString("Enter Last Name");
-        int customerId = io.getInt("Enter Customer ID Number");
-
-        customer1.setCustomerId(customerId);
-        customer1.setLastName(lastName);
-
-        int currentCustomerId = customer1.getCustomerId();
-        if(customers.stream().anyMatch(customer -> Objects.equals(customer.getCustomerId(), currentCustomerId))) {
-                io.displayMessage("Existing Customer");
-            }
-        else { customers.add(customer1); }
-
-        return customer1;
-        //customers.add(customer);
-    }
-
-    public Customer enterCustomerInformationAlternate() {
-        Customer customer1 = new Customer("", 0);
+        Customer currentCustomer;
 
         io.displayMessage("Customer Listing");
         rentData.getCustomerList();
@@ -96,84 +59,97 @@ public class RentalControllerWithRentalDataObject {
         String lastName = io.getString("Enter Last Name");
         int customerId = io.getInt("Enter Customer ID Number");
 
-        /*customer1.setCustomerId(customerId);
-        customer1.setLastName(lastName);*/
-
-        if(rentData.getCustomers().containsKey(customerId)) {
-            io.displayMessage("Existing Customer");
-            //customerId = customerId;
+        // checks if customerId is 0 so it doesn't go into proceeding code
+        if (customerId != 0) {
+            if (rentData.getCustomers().containsKey(customerId)) {
+                io.displayMessage("Existing Customer");
+            } else {
+                rentData.addCustomer(new Customer(lastName, customerId));
+            }
+            currentCustomer = rentData.getCustomers().get(customerId);
         }
-        else { rentData.addCustomer(new Customer(lastName, customerId));
-        }
-        customer1 = rentData.getCustomers().get(customerId);
+        else {currentCustomer = null;}
 
-        return customer1;
-        //customers.add(customer);
+        return currentCustomer;
     }
 
     public void rentVehicle(Customer customer) {
+        if (customer != null) {
 
-        if (vehicles.size() > 0) {
-            viewAvailableVehicles();
-            io.displayMessage("Select a vehicle - Enter corresponding ID");
-            int vehicleId = io.getInt("");
-                vehicle = checkIfVehicleIsInList(vehicles, vehicleId);
+            if (!rentData.getVehicles().isEmpty()) {
+                viewAvailableVehicles();
+                io.displayMessage("Select a vehicle - Enter corresponding ID");
+                Integer vehicleId = io.getInt("");
+                vehicle = checkIfVehicleIsInList(rentData.getVehicles(), vehicleId);
+
                 if (vehicle != null) {
                     vehicle.setRented(true);
-                    vehicles.remove(vehicle);
-                    rentedVehicles.add(vehicle);
                     vehicle.setRentedCustomer(customer.getCustomerId());
+                    rentData.getVehicles().remove(vehicleId);
+                    rentData.getRentedVehicles().put(vehicle.getVehicleId(), vehicle);
+
                     io.displayMessage(vehicle.getModel() + " rented by " + customer.getLastName());
+                } else {
+                    io.displayMessage(">>>>>>> ERROR \n ---- Problem with vehicle id. \n ---- No vehicle not rented.");
                 }
-                else { io.displayMessage("Error occurred with vehicle id, vehicle not rented."); }
+            } else {
+                io.displayMessage("No Vehicles Available");
             }
-        else { io.displayMessage("No Vehicles Available"); }
+        }
+            else { io.displayMessage("Invalid entry for customer id. Please retry renting.");}
     }
 
 
     public void returnVehicle() {
-        showRentedVehiclesInformation();
-        int id = io.getInt("Enter vehicle ID to return");
-        vehicle = checkIfVehicleIsInList(rentedVehicles, id);
+        boolean returnVehicle = showRentedVehiclesInformation();
 
-        if (vehicle != null) {
-            vehicle.setRented(false);
-            vehicles.add(vehicle);
-            rentedVehicles.remove(vehicle);
-            vehicle.setRentedCustomer(0);
-            io.displayMessage("Return Successful");
+        if (returnVehicle) {
+
+            Integer id = io.getInt("Enter vehicle ID to return");
+            rentData.getRentedVehicleList();
+            vehicle = checkIfVehicleIsInList(rentData.getRentedVehicles(), id);
+
+            if (vehicle != null) {
+                vehicle.setRented(false);
+                vehicle.setRentedCustomer(0);
+                rentData.getVehicles().put(id, vehicle);
+                rentData.getRentedVehicles().remove(id);
+                io.displayMessage("Return Successful");
+            } else {
+                io.displayMessage("Error occurred with vehicle id, vehicle not returned.");
+            }
         }
-        else { io.displayMessage("Error occurred with vehicle id, vehicle not returned."); }
+         else { io.displayMessage(""); } ;
+
     }
 
     public void viewAvailableVehicles() {
         io.displayMessage("----Vehicles----");
-        if(vehicles.size() == 0) { io.displayMessage("Sold Out"); }
-        for (Vehicle vehicle : vehicles) {
-            io.displayMessage(vehicle.toString());
-        }
+        if(rentData.getVehicles().isEmpty()) { io.displayMessage("Sold Out"); }
+        else { rentData.getVehicleList();}
     }
 
-    public Vehicle checkIfVehicleIsInList(List<Vehicle> vehicles, int vehicleId){
-            Vehicle getVehicle = null;
+    public Vehicle checkIfVehicleIsInList(Map<Integer, Vehicle> vehicles, Integer vehicleId){
+
             if (vehicles.size() > 0) {
-                for (Vehicle vehicle : vehicles) {
-                    if (vehicle.getVehicleId() == vehicleId) {
-                        getVehicle = vehicle;
-                        break;
-                        }
-                    }
+                if(vehicles.containsKey(vehicleId)) {
+                    // found problem - this method was only looking in the un-rented vehicle when it should be looking in rented vehicles during return method
+                    vehicle = rentData.getSingleVehicle(vehicles, vehicleId);
                 }
-            else {io.displayMessage("Vehicle Not Found"); }
-        return getVehicle;
-    }
-
-    public void showRentedVehiclesInformation (){
-        if (!rentedVehicles.isEmpty()){
-        for (Vehicle vehicle : rentedVehicles) {
-                System.out.println("Vehicle " + vehicle.getVehicleId() + " rented out by customer " + vehicle.getRentedCustomer());
             }
-        }
+            else {io.displayMessage("Vehicle Not Found"); vehicle = null;}
+        return vehicle;
     }
 
+    public boolean showRentedVehiclesInformation (){
+
+        boolean rentedVehiclesExist;
+        if (!rentData.getRentedVehicles().isEmpty()){
+                rentData.getRentedVehicleList();
+                rentedVehiclesExist = true;
+            }
+        else { io.displayMessage("No vehicles rented out."); rentedVehiclesExist = false; }
+
+        return rentedVehiclesExist;
+    }
 }
