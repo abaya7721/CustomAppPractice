@@ -2,12 +2,12 @@ package org.rentalcompany.model;
 
 public class Vehicle {
 
-    private Integer vehicleId;
+    private final int vehicleId;
     private int rentedCustomer;
     private boolean isRented;
     private String model;
 
-    public Vehicle(Integer vehicleId, String model) {
+    public Vehicle(int vehicleId, String model) {
         this.vehicleId = vehicleId;
         this.model = model;
     }
@@ -28,11 +28,11 @@ public class Vehicle {
         isRented = rented;
     }
 
-    public Integer getRentedCustomer() {
+    public int getRentedCustomer() {
         return rentedCustomer;
     }
 
-    public void setRentedCustomer(Integer rentedCustomer) {
+    public void setRentedCustomer(int rentedCustomer) {
         this.rentedCustomer = rentedCustomer;
     }
 

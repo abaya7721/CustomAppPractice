@@ -13,10 +13,13 @@ import java.util.Objects;
 public class RentalControllerWithRentalDataObject {
 
     private ConsoleIO io = new ConsoleIO();
+    private List<Vehicle> vehicles;
     private List<Customer> customers;
+    private Customer customer;
+    private List<Vehicle> rentedVehicles;
     private Vehicle vehicle;
 
-
+    // --------------- refactored code below
     RentalDatabase rentData;
 
     public RentalControllerWithRentalDataObject(RentalDatabase data) {
@@ -50,6 +53,28 @@ public class RentalControllerWithRentalDataObject {
         }
     }
 
+    public Customer enterCustomerInformationAlt() {
+        Customer customer1 = new Customer("", 0);
+        io.displayMessage("Customer Listing");
+        for (Customer customer : customers) { io.displayMessage(customer.getLastName()+" " +customer.getCustomerId());}
+
+        io.displayMessage("Enter Customer Information -------");
+        String lastName = io.getString("Enter Last Name");
+        int customerId = io.getInt("Enter Customer ID Number");
+
+        customer1.setCustomerId(customerId);
+        customer1.setLastName(lastName);
+
+        int currentCustomerId = customer1.getCustomerId();
+        if(customers.stream().anyMatch(customer -> Objects.equals(customer.getCustomerId(), currentCustomerId))) {
+                io.displayMessage("Existing Customer");
+            }
+        else { customers.add(customer1); }
+
+        return customer1;
+        //customers.add(customer);
+    }
+
     public Customer enterCustomerInformation() {
         Customer currentCustomer;
 
@@ -76,13 +101,11 @@ public class RentalControllerWithRentalDataObject {
 
     public void rentVehicle(Customer customer) {
         if (customer != null) {
-
             if (!rentData.getVehicles().isEmpty()) {
                 viewAvailableVehicles();
                 io.displayMessage("Select a vehicle - Enter corresponding ID");
-                Integer vehicleId = io.getInt("");
+                int vehicleId = io.getInt("");
                 vehicle = checkIfVehicleIsInList(rentData.getVehicles(), vehicleId);
-
                 if (vehicle != null) {
                     vehicle.setRented(true);
                     vehicle.setRentedCustomer(customer.getCustomerId());
@@ -105,9 +128,8 @@ public class RentalControllerWithRentalDataObject {
         boolean returnVehicle = showRentedVehiclesInformation();
 
         if (returnVehicle) {
-            
-            Integer id = io.getInt("Enter vehicle ID to return");
-            rentData.getRentedVehicleList();
+
+            int id = io.getInt("Enter vehicle ID to return");
             vehicle = checkIfVehicleIsInList(rentData.getRentedVehicles(), id);
 
             if (vehicle != null) {
@@ -128,18 +150,23 @@ public class RentalControllerWithRentalDataObject {
         io.displayMessage("----Vehicles----");
         if(rentData.getVehicles().isEmpty()) { io.displayMessage("Sold Out"); }
         else { rentData.getVehicleList();}
+
+        /*if(vehicles.size() == 0) { io.displayMessage("Sold Out"); }
+        for (Vehicle vehicle : vehicles) {
+            io.displayMessage(vehicle.toString());
+        }*/
     }
 
-    public Vehicle checkIfVehicleIsInList(Map<Integer, Vehicle> vehicles, Integer vehicleId){
+    public Vehicle checkIfVehicleIsInList(Map vehicles, int vehicleId){
+            Vehicle getVehicle = null;
 
             if (vehicles.size() > 0) {
                 if(vehicles.containsKey(vehicleId)) {
-                    // found problem - this method was only looking in the un-rented vehicle when it should be looking in rented vehicles during return method
-                    vehicle = rentData.getSingleVehicle(vehicles, vehicleId);
+                    getVehicle = rentData.getSingleVehicle(vehicleId);
                 }
             }
-            else {io.displayMessage("Vehicle Not Found"); vehicle = null;}
-        return vehicle;
+            else {io.displayMessage("Vehicle Not Found"); }
+        return getVehicle;
     }
 
     public boolean showRentedVehiclesInformation (){
