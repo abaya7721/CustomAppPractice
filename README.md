@@ -1,4 +1,4 @@
-## CustomAppPractice
+## CarRentalApp
 
 ### Functions
 
@@ -24,5 +24,5 @@
 Future
     View rented vehicles
     Calculates estimated cost
-        - Customer receives total cost
+        - Customer receives total cost 
 

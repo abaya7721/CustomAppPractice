@@ -1,4 +1,4 @@
-package org.rentalcompany;
+package org.rentalcompany.view;
 
 import java.util.Scanner;
 

@@ -1,4 +1,4 @@
-package org.rentalcompany;
+package org.rentalcompany.model;
 
 public class Customer {
 

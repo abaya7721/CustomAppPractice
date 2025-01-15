@@ -1,8 +1,8 @@
-package org.rentalcompany;
+package org.rentalcompany.model;
 
 public class Vehicle {
 
-    private int vehicleId;
+    private final int vehicleId;
     private int rentedCustomer;
     private boolean isRented;
     private String model;
@@ -40,9 +40,9 @@ public class Vehicle {
         return vehicleId;
     }
 
-    public void setVehicleId(int vehicleId) {
-        this.vehicleId = vehicleId;
-    }
+//    public void setVehicleId(int vehicleId) {
+//        this.vehicleId = vehicleId;
+//    }
 
     @Override
     public String toString() {

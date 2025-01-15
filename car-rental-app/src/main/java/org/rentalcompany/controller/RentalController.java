@@ -1,4 +1,8 @@
-package org.rentalcompany;
+package org.rentalcompany.controller;
+
+import org.rentalcompany.model.Customer;
+import org.rentalcompany.model.Vehicle;
+import org.rentalcompany.view.ConsoleIO;
 
 import java.util.ArrayList;
 import java.util.List;
