@@ -40,13 +40,16 @@ public class Vehicle {
         return vehicleId;
     }
 
+//    public Vehicle getVehicle() {
+//        return Vehicle;
+//    }
+
 //    public void setVehicleId(int vehicleId) {
 //        this.vehicleId = vehicleId;
 //    }
 
     @Override
     public String toString() {
-        return "ID: " + vehicleId + "," +
-                " Model: " + model;
+        return " Model: " + model;
     }
 }
